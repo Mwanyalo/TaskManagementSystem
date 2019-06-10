@@ -1,0 +1,21 @@
+<div class="sign-in">
+  <div class="row">
+        <div class="card">
+          <div class="card-header text-center">
+            <h4>Task Manager</h4>
+          </div>
+            <form (ngSubmit)="userForm.form.valid && logUser()" #userForm="ngForm">
+              <div class="form-group mt-4">
+                <input class="form-control" [(ngModel)]="model.username" name="username" type="text"
+                  #username="ngModel" placeholder="Enter Username" required />
+              </div>
+              <div *ngIf="username.invalid && userForm.submitted" class="card-error">
+                <div *ngIf="username.errors.required">User name is required</div>
+              </div>
+              <button type="submit" class="btn btn-block">
+                Start Task
+              </button>
+            </form>
+          </div>
+  </div>
+</div>

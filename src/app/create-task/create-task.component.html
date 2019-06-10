@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <form (ngSubmit)="taskForm.form.valid && addTask()" #taskForm="ngForm">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" class="form-control" [(ngModel)]="model.title" name="title" 
+        #title="ngModel" required />
+      </div>
+      <div *ngIf="title.invalid && taskForm.submitted" class="alert alert-danger">
+        <small *ngIf="title.errors.required">Title is required</small>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" id="description" class="form-control" [(ngModel)]="model.description" name="description" 
+        #description="ngModel" required />
+      </div>
+        <div *ngIf="description.invalid && taskForm.submitted" class="alert alert-danger">
+          <small *ngIf="description.errors.required">Description is required</small>
+        </div>
+      <button type="submit" class="btn btn-success">
+        Create task
+      </button>
+    </form>
+  </div>
+</div>

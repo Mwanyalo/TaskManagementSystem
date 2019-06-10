@@ -1,0 +1,142 @@
+<div class="container-fluid">
+  <nav class="navbar fixed-top navbar-light bg-light">
+    <h4 class="navbar-brand">Task Manager</h4>
+    <button type="button" class="btn btn-small btn-secondary" data-toggle="modal" data-target="#taskModal">
+      Add Task
+    </button>
+    <button type="button" class="btn btn-small btn-secondary" [routerLink]="['/user']">
+      Logout
+    </button>
+  </nav>
+
+  <div class="row">
+
+    <div class="col">
+      <div class="card">
+        <div class="todo-header">
+          <h4>To do</h4>
+        </div>
+        <div class="card-task" cdkDropList #todoList="cdkDropList" [cdkDropListData]="toDoTask"
+          [cdkDropListConnectedTo]="[progressList]" (cdkDropListDropped)="drop($event, toDoTask)">
+          <div class="text-center mt-2" *ngIf="toDoTask.length == 0">
+            <h5> No tasks</h5>
+          </div>
+          <div class="card-body todo m-1" *ngFor="let task of toDoTask" [cdkDragData]="task" cdkDrag>
+            <h6 class="mb-1">{{ task.title | titlecase }}</h6>
+            <p class="mb-1">{{ task.description }}</p>
+            <small class="text-muted"> {{ task.startDate | date:'short' }} </small>
+            <div class="task-footer">
+              <button type="button" (click)="editTask( task )" data-toggle="modal" data-target="#taskModal"
+                class="btn btn-primary btn-sm">
+                Edit
+              </button>
+              <button type="button" (click)="deleteTask( task.id )" class="btn btn-danger btn-sm float-right">
+                Delete
+              </button>
+            </div>
+
+          </div>
+        </div>
+        <div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <div class="prog-header">
+          <h4>On going</h4>
+        </div>
+        <div class="card-task" cdkDropList #progressList="cdkDropList" [cdkDropListData]="inProgressTask"
+          [cdkDropListConnectedTo]="[doneList]" (cdkDropListDropped)="drop($event, inProgressTask)">
+          <div class="text-center mt-2" *ngIf="inProgressTask.length == 0">
+            <h5>No On-going Tasks</h5>
+          </div>
+          <div class="card-body in-prog m-1" *ngFor="let task of inProgressTask" [cdkDragData]="task" cdkDrag>
+            <h6 class="mb-1">{{ task.title | titlecase }}</h6>
+            <p class="mb-1">{{ task.description }}</p>
+            <small class="text-muted">Start: {{ task.startDate | date:'short' }} </small>
+            <div class="task-footer">
+              <button type="button" (click)="editTask( task )" class="btn btn-primary btn-sm">
+                Edit
+              </button>
+              <button type="button" (click)="deleteTask( task.id )" class="btn btn-danger btn-sm float-right">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <div class="completed-header">
+          <h4>Completed</h4>
+        </div>
+        <div class="card-task" cdkDropList #doneList="cdkDropList" [cdkDropListData]="completedTask"
+          [cdkDropListConnectedTo]="[progressList]" (cdkDropListDropped)="drop($event, completedTask)">
+          <div class="text-center mt-2" *ngIf="completedTask.length == 0">
+            <h5>No Completed Tasks</h5>
+          </div>
+          <div class="card-body completed m-1" *ngFor="let task of completedTask" [cdkDragData]="task" cdkDrag>
+            <h6 class="mb-1">{{ task.title | titlecase }}</h6>
+            <p class="mb-1">{{ task.description }}</p>
+            <small class="text-muted">Start: {{ task.startDate | date:'short' }} </small>
+            <small class="text-muted">End: {{ task.endDate | date:'short' }} </small>
+            <div class="task-footer">
+              <button type="button" (click)="deleteTask( task.id )" class="btn btn-danger btn-sm">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">Add Task</h5>
+        <button #btnClose type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form (ngSubmit)="taskForm.form.valid && saveTask()" #taskForm="ngForm">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" class="form-control" [(ngModel)]="model.title" name="title" #title="ngModel"
+              required />
+          </div>
+          <div *ngIf="title.invalid && taskForm.submitted" class="alert alert-danger">
+            <small *ngIf="title.errors.required">Title is required</small>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" class="form-control" [(ngModel)]="model.description" name="description"
+              #description="ngModel" required />
+          </div>
+          <div *ngIf="description.invalid && taskForm.submitted" class="alert alert-danger">
+            <small *ngIf="description.errors.required">Description is required</small>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">
+              Save task
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
